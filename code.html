@@ -1,0 +1,379 @@
+<html class="dark" lang="en">
+
+<head></head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-bone antialiased">
+
+
+
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>nikitastrike</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans:wght@400;500&amp;family=Space+Mono&amp;display=swap"
+        rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#144bb8",
+                        "background-light": "#f6f6f8",
+                        "background-dark": "#0a0a0a",
+                        "bone": "#f5f5f5",
+                        "charcoal": "#1a1a1a",
+                    },
+                    fontFamily: {
+                        "display": ["Space Grotesk", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                        "mono": ["Space Mono", "monospace"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+    <style type="text/tailwindcss">
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            scroll-behavior: smooth;
+        }
+        .text-bone { color: #f5f5f5; }
+        .bg-obsidian { background-color: #0a0a0a; }
+        .border-charcoal { border-color: #262626; }
+        .timeline-line { width: 1px; background: #262626; position: absolute; left: 8px; top: 0; bottom: 0; }
+        .timeline-dot { width: 16px; height: 16px; border-radius: 50%; background: #144bb8; position: absolute; left: 0; border: 4px solid #0a0a0a; }
+        .oss-link {
+            @apply flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-slate-500 hover:text-primary transition-colors font-bold;
+        }
+    </style>
+
+
+    <header
+        class="fixed top-0 w-full z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-charcoal">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-primary text-2xl">terminal</span>
+                <span class="font-bold tracking-tight text-lg uppercase">nikitastrike</span>
+            </div>
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide uppercase">
+                <a class="hover:text-primary transition-colors" href="#home">Home</a>
+                <a class="hover:text-primary transition-colors" href="#about">About</a>
+                <a class="hover:text-primary transition-colors" href="#experience">Experience</a>
+                <a class="hover:text-primary transition-colors" href="#professional-projects">Professional</a>
+                <a class="hover:text-primary transition-colors" href="#oss-tools">OSS &amp; Tools</a>
+                <a class="hover:text-primary transition-colors" href="#contact">Contact</a>
+            </nav>
+            <a class="bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-all"
+                href="mailto:me@nikitastrike.co">
+                Contact
+            </a>
+        </div>
+    </header>
+    <main class="pt-16">
+        <section class="min-h-[90vh] flex flex-col justify-center px-6 max-w-7xl mx-auto border-b border-charcoal"
+            id="home">
+            <div class="max-w-4xl">
+                <h2 class="text-primary font-medium tracking-[0.2em] uppercase mb-4 text-sm">Systems Architect</h2>
+                <h1 class="text-6xl md:text-8xl font-bold leading-[0.9] tracking-tighter mb-8">
+                    Nicolás <br /> Pinzón Contreras
+                </h1>
+                <p class="text-xl md:text-2xl text-slate-400 max-w-2xl font-light leading-relaxed">
+                    Engineering secure, data-driven backends and specialized technical tools with an emphasis on
+                    protocol analysis and systems integrity.
+                </p>
+                <div class="mt-12 flex flex-wrap gap-12">
+                    <div class="flex flex-col border-l-2 border-primary pl-4">
+                        <span class="text-xs uppercase tracking-widest text-slate-500 mb-1">Role</span>
+                        <span class="font-medium">Systems Architect</span>
+                    </div>
+                    <div class="flex flex-col border-l-2 border-primary pl-4">
+                        <span class="text-xs uppercase tracking-widest text-slate-500 mb-1">Focus</span>
+                        <span class="font-medium">Backend Engineering</span>
+                    </div>
+                    <div class="flex flex-col border-l-2 border-primary pl-4">
+                        <span class="text-xs uppercase tracking-widest text-slate-500 mb-1">Specialization</span>
+                        <span class="font-medium">Reverse Engineering</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-32 px-6 max-w-7xl mx-auto border-b border-charcoal grid grid-cols-1 md:grid-cols-12 gap-12"
+            id="about">
+            <div class="md:col-span-4">
+                <h3 class="text-3xl font-bold sticky top-24 uppercase tracking-tight">Technical <br /> Methodology</h3>
+            </div>
+            <div class="md:col-span-8">
+                <div class="prose prose-invert max-w-none text-slate-300 space-y-8 text-lg leading-relaxed">
+                    <p>
+                        I focus on building reliable systems by understanding the underlying data structures and
+                        communication protocols. My professional work centers on architecting robust backend logic for
+                        healthcare and licensing systems, while my personal research delves into binary analysis and
+                        network protocol inspection.
+                    </p>
+                    <p>
+                        I prioritize honest engineering: selecting tools for their technical merit—such as Drizzle ORM
+                        for type-safe database interactions or Redis for managing state in distributed
+                        environments—rather than industry trends.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="py-32 px-6 max-w-7xl mx-auto border-b border-charcoal" id="experience">
+            <h3 class="text-3xl font-bold mb-16 uppercase tracking-tight text-primary">Professional History</h3>
+            <div class="space-y-24 relative">
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 relative">
+                    <div class="hidden md:block absolute timeline-line left-[20.5%]"></div>
+                    <div class="md:col-span-3 text-slate-500 font-medium">2021 — PRESENT</div>
+                    <div class="md:col-span-1 relative">
+                        <div class="timeline-dot hidden md:block"></div>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h4 class="text-2xl font-bold mb-2">Systems Architect</h4>
+                        <div class="text-primary font-medium mb-6 uppercase tracking-wider text-sm">Connectiva</div>
+                        <ul class="space-y-4 text-slate-400">
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+                                <span>Architecting secure adapter layers for healthcare interoperability and
+                                    governmental integrations.</span>
+                            </li>
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+                                <span>Implementing complex validation engines for regulatory compliance in billing
+                                    systems.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-8 relative">
+                    <div class="hidden md:block absolute timeline-line left-[20.5%]"></div>
+                    <div class="md:col-span-3 text-slate-500 font-medium">2019 — 2021</div>
+                    <div class="md:col-span-1 relative">
+                        <div class="timeline-dot hidden md:block"></div>
+                    </div>
+                    <div class="md:col-span-8">
+                        <h4 class="text-2xl font-bold mb-2">Fullstack Engineer &amp; IT Admin</h4>
+                        <div class="text-primary font-medium mb-6 uppercase tracking-wider text-sm">EPICO!</div>
+                        <ul class="space-y-4 text-slate-400">
+                            <li class="flex items-start gap-3">
+                                <span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+                                <span>Developed local-first POS systems with direct hardware protocol
+                                    integration.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="py-32 px-6 max-w-7xl mx-auto border-b border-charcoal" id="professional-projects">
+            <div class="mb-16">
+                <h3 class="text-3xl font-bold uppercase tracking-tight mb-2">Professional Projects</h3>
+                <p class="text-slate-500 text-sm uppercase tracking-widest font-medium">Technical Narratives &amp;
+                    Challenges</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6">
+                        <h4 class="text-2xl font-bold mb-1">Agendify</h4>
+                        <span class="text-xs text-slate-500 uppercase font-bold tracking-widest">Connectiva / Systems
+                            Architect</span>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        Engineered the backend scheduling logic to synchronize medical appointments with FHIR-compliant
+                        hospital databases. The solution involved implementing an adapter layer to map unstructured
+                        requests into validated FHIR resources and utilizing Redis-backed notification queues to manage
+                        multi-channel reminders, ensuring consistency across asynchronous services.
+                    </p>
+                </div>
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6">
+                        <h4 class="text-2xl font-bold mb-1">Ripsify</h4>
+                        <span class="text-xs text-slate-500 uppercase font-bold tracking-widest">Connectiva / Systems
+                            Architect</span>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        Designed a rule-based validation engine to ensure compliance with Resolution 2275 for healthcare
+                        billing. The technical challenge centered on mapping diverse ERP data structures to strict
+                        government-mandated schemas. I implemented a modular validation pipeline that inspects data at
+                        the record level before final transmission.
+                    </p>
+                </div>
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6">
+                        <h4 class="text-2xl font-bold mb-1">SMS</h4>
+                        <span class="text-xs text-slate-500 uppercase font-bold tracking-widest">Connectiva / Software
+                            Engineer</span>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        Developed a licensing and distribution system for proprietary binaries. I implemented a security
+                        model based on RSA encryption and "timebomb" JWT tokens that expire autonomously to prevent
+                        unauthorized use. The system maintains client-server synchronization via WebSocket heartbeats,
+                        ensuring license state is validated in real-time.
+                    </p>
+                </div>
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6">
+                        <h4 class="text-2xl font-bold mb-1">Teseo</h4>
+                        <span class="text-xs text-slate-500 uppercase font-bold tracking-widest">Connectiva /
+                            Infrastructure Lead</span>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        Architected an adapter-based system for interfacing with government entity APIs. I utilized
+                        Drizzle ORM for type-safe database interactions and implemented AES-256-GCM encryption for
+                        securing sensitive tenant credentials. The architecture focuses on strict data isolation between
+                        multiple organizational tenants.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="py-32 px-6 max-w-7xl mx-auto border-b border-charcoal" id="oss-tools">
+            <div class="mb-16">
+                <h3 class="text-3xl font-bold uppercase tracking-tight mb-2">OSS &amp; Tools</h3>
+                <p class="text-slate-500 text-sm uppercase tracking-widest font-medium">Reverse Engineering &amp; Binary
+                    Analysis Expertise</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-20">
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6 flex justify-between items-start">
+                        <div>
+                            <h4 class="text-2xl font-bold mb-1">mgps</h4>
+                            <span class="text-xs text-primary uppercase font-bold tracking-widest">Private Server
+                                Development</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a class="oss-link" href="https://github.com/nikitacontreras/mgps" target="_blank">
+                                <span class="material-symbols-outlined !text-sm">code</span> Repository
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        A project focused on the reverse engineering of the Mundo Gaturro private server protocol. I
+                        performed deep packet analysis to reconstruct undocumented binary communication patterns,
+                        enabling the implementation of a custom server-side handler for legacy client interactions.
+                    </p>
+                </div>
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6 flex justify-between items-start">
+                        <div>
+                            <h4 class="text-2xl font-bold mb-1">roomie</h4>
+                            <span class="text-xs text-primary uppercase font-bold tracking-widest">Binary Metadata
+                                Extraction</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a class="oss-link" href="https://github.com/nikitacontreras/roomie" target="_blank">
+                                <span class="material-symbols-outlined !text-sm">code</span> Repo
+                            </a>
+                            <a class="oss-link" href="https://npmjs.com/package/roomie" target="_blank">
+                                <span class="material-symbols-outlined !text-sm">package</span> Package
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        A library developed for the automated extraction of ROM metadata. I implemented binary signature
+                        matching and hashing logic to identify and catalog software assets by their internal structure
+                        rather than filenames, solving challenges in large-scale dataset organization.
+                    </p>
+                </div>
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6 flex justify-between items-start">
+                        <div>
+                            <h4 class="text-2xl font-bold mb-1">chaturbapi</h4>
+                            <span class="text-xs text-primary uppercase font-bold tracking-widest">API Reverse
+                                Engineering</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a class="oss-link" href="https://github.com/nikitacontreras/chaturbapi" target="_blank">
+                                <span class="material-symbols-outlined !text-sm">code</span> Repo
+                            </a>
+                            <a class="oss-link" href="https://npmjs.com/package/chaturbapi" target="_blank">
+                                <span class="material-symbols-outlined !text-sm">package</span> Package
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        A TypeScript-based wrapper for Affiliate APIs, built through the analysis of private endpoints.
+                        I mapped out undocumented request structures and response schemas to provide a structured,
+                        programmatic interface for services lacking public developer documentation.
+                    </p>
+                </div>
+                <div class="flex flex-col border-t border-charcoal pt-8">
+                    <div class="mb-6 flex justify-between items-start">
+                        <div>
+                            <h4 class="text-2xl font-bold mb-1">wavevault</h4>
+                            <span class="text-xs text-primary uppercase font-bold tracking-widest">Backend Audio
+                                Management</span>
+                        </div>
+                        <div class="flex gap-4">
+                            <a class="oss-link" href="https://github.com/nikitacontreras/wavevault" target="_blank">
+                                <span class="material-symbols-outlined !text-sm">code</span> Repository
+                            </a>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 font-light leading-relaxed">
+                        An audio management backend designed for precise signal handling. I focused on building an
+                        efficient storage and retrieval system that maintains high fidelity, managing audio buffers and
+                        metadata with minimal overhead for streaming applications.
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section class="py-32 px-6 max-w-7xl mx-auto border-b border-charcoal" id="contact">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-12">
+                <div class="md:col-span-5">
+                    <h3 class="text-3xl font-bold uppercase tracking-tight mb-8">Contact</h3>
+                    <p class="text-slate-400 text-lg mb-12 max-w-sm">
+                        Open to technical inquiries regarding systems architecture, reverse engineering projects, or
+                        high-integrity backend development.
+                    </p>
+                </div>
+                <div class="md:col-span-7 flex flex-col gap-12">
+                    <div>
+                        <a class="text-3xl md:text-5xl font-bold block mb-4 hover:text-primary transition-colors"
+                            href="mailto:me@nikitastrike.co">me@nikitastrike.co</a>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-8 border-t border-charcoal">
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-slate-500 mb-2 block">Version
+                                Control</span>
+                            <a class="text-lg font-medium hover:text-primary transition-colors"
+                                href="https://github.com/nikitacontreras">github.com/nikitacontreras</a>
+                        </div>
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-slate-500 mb-2 block">Professional
+                                Network</span>
+                            <a class="text-lg font-medium hover:text-primary transition-colors"
+                                href="https://linkedin.com/in/nikitastrike">linkedin.com/in/nikitastrike</a>
+                        </div>
+                        <div>
+                            <span class="text-xs uppercase tracking-widest text-slate-500 mb-2 block">Scientific
+                                Registry</span>
+                            <a class="text-lg font-medium hover:text-primary transition-colors"
+                                href="https://orcid.org/0009-0006-9512-6504">orcid.0009-0006-9512-6504</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <footer
+            class="py-12 px-6 max-w-7xl mx-auto flex flex-col md:flex-row justify-center items-center text-slate-600">
+            <div class="font-mono text-[10px] uppercase tracking-widest">
+                ©
+                <script>document.write(new Date().getFullYear())</script>
+            </div>
+        </footer>
+    </main>
+
+    ```
+</body>
+
+</html>
