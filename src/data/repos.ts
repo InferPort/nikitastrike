@@ -2,6 +2,16 @@ import { Repo } from '../types';
 
 export const repos: Repo[] = [
     {
+        name: "gios",
+        type: "Build System / CLI",
+        description: {
+            en: "An ultra-fast, cross-platform CLI tool written in Go. It empowers developers to build, package, and deploy Go-based tweaks and background services directly to legacy and modern rootless iOS jailbreak environments without complex theos setups.",
+            es: "Una herramienta CLI multiplataforma ultrarrápida escrita en Go. Permite a los desarrolladores construir, empaquetar y desplegar tweaks y servicios en segundo plano basados en Go directamente a entornos iOS heredados y modernos rootless sin configuraciones complejas de theos."
+        },
+        githubUrl: "https://github.com/nikitacontreras/gios",
+        tags: ["Go", "CLI", "iOS Jailbreak", "Build System"]
+    },
+    {
         name: "mgps",
         type: "Private Server Development",
         description: {
