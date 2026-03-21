@@ -222,9 +222,22 @@ const RoomieDemo: React.FC = () => {
                         </div>
                     </motion.div>
                 ) : (
-                    <motion.div key="empty" className="py-20 flex flex-col items-center justify-center border border-charcoal text-slate-800 opacity-20 italic">
-                        <FileSearch size={48} className="mb-4" />
-                        <p className="text-sm uppercase tracking-widest animate-pulse">Waiting for telemetry data...</p>
+                    <motion.div
+                        key="empty"
+                        className="py-32 flex flex-col items-center justify-center border border-charcoal bg-slate-950/30"
+                    >
+                        <div className="relative mb-6">
+                            <FileSearch size={48} className="text-slate-800" />
+                            <motion.div
+                                className="absolute inset-x-[-10px] top-1/2 h-px bg-primary/30"
+                                animate={{ top: ['0%', '100%', '0%'] }}
+                                transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                            />
+                        </div>
+                        <div className="text-center space-y-2">
+                            <p className="text-[10px] uppercase tracking-[0.3em] font-bold text-slate-500">System idle</p>
+                            <p className="text-xs uppercase tracking-widest text-slate-400 animate-pulse font-bold">Waiting for telemetry data...</p>
+                        </div>
                     </motion.div>
                 )}
             </AnimatePresence>
