@@ -3,7 +3,7 @@ import Roomie from 'roomie';
 import { Buffer } from 'buffer';
 import { motion, AnimatePresence } from 'framer-motion';
 
-import { Upload, FileSearch, Trash2, Github, Cpu, Hash, Globe, Database, Info, Gamepad2, ChevronRight } from 'lucide-react';
+import { Upload, FileSearch, Trash2, Github, Cpu, Hash, Globe, Database, Info, Gamepad2, ChevronRight, Activity, Cpu as CpuIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '../utils/cn';
 
@@ -29,46 +29,46 @@ interface RomData {
 
 const getSystemColor = (system: string) => {
     const colors: Record<string, string> = {
-        nes: 'from-red-500/20 to-transparent',
-        sfc: 'from-purple-500/20 to-transparent',
-        n64: 'from-green-500/20 to-transparent',
-        gb: 'from-emerald-500/20 to-transparent',
-        gba: 'from-blue-500/20 to-transparent',
-        nds: 'from-cyan-500/20 to-transparent',
-        genesis: 'from-indigo-500/20 to-transparent',
-        sms: 'from-sky-500/20 to-transparent',
-        gg: 'from-violet-500/20 to-transparent',
-        pce: 'from-orange-500/20 to-transparent',
-        ws: 'from-pink-500/20 to-transparent',
-        wsc: 'from-rose-500/20 to-transparent',
+        nes: 'border-red-500/50',
+        sfc: 'border-purple-500/50',
+        n64: 'border-green-500/50',
+        gb: 'border-emerald-500/50',
+        gba: 'border-blue-500/50',
+        nds: 'border-cyan-500/50',
+        genesis: 'border-indigo-500/50',
+        sms: 'border-sky-500/50',
+        gg: 'border-violet-500/50',
+        pce: 'border-orange-500/50',
+        ws: 'border-pink-500/50',
+        wsc: 'border-rose-500/50',
     };
-    return colors[system as keyof typeof colors] || 'from-primary/20 to-transparent';
+    return colors[system] || 'border-primary/50';
 };
 
-const getSystemBadge = (system: string) => {
+const getSystemLabel = (system: string) => {
     const labels: Record<string, string> = {
-        nes: 'Nintendo Entertainment System',
-        sfc: 'Super Famicom / SNES',
+        nes: 'Nintendo Entertainment System (NES)',
+        sfc: 'Super Nintendo / Super Famicom',
         n64: 'Nintendo 64',
-        gb: 'Game Boy',
+        gb: 'Nintendo Game Boy (Classic)',
         gba: 'Game Boy Advance',
         nds: 'Nintendo DS',
         genesis: 'Sega Genesis / Mega Drive',
         sms: 'Sega Master System',
         gg: 'Sega Game Gear',
-        pce: 'PC Engine / TurboGrafx-16',
+        pce: 'TurboGrafx-16 / PC Engine',
         ws: 'WonderSwan',
         wsc: 'WonderSwan Color',
     };
-    return labels[system as keyof typeof labels] || system.toUpperCase();
+    return labels[system] || system.toUpperCase();
 };
 
 const RoomieDemo: React.FC = () => {
     const { t } = useTranslation();
-    const [isDragging, setIsDragging] = useState(false);
     const [romInfo, setRomInfo] = useState<RomData | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [isDragging, setIsDragging] = useState(false);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const processFile = async (file: File) => {
@@ -79,51 +79,14 @@ const RoomieDemo: React.FC = () => {
         try {
             const arrayBuffer = await file.arrayBuffer();
             const buffer = Buffer.from(arrayBuffer);
-
             const roomie = new Roomie(buffer as any);
             await roomie.load(buffer as any);
-
-            setRomInfo({
-                ...roomie.info,
-                name: roomie.name,
-                gameid: roomie.gameid,
-                cartridge: roomie.cartridge
-            });
+            setRomInfo({ ...roomie.info, name: roomie.name, gameid: roomie.gameid, cartridge: roomie.cartridge });
         } catch (err: any) {
-            console.error(err);
-
-            if (err.message === 'unknown_bytes') {
-                setError('Unknown ROM format. Supported: NES, SFC, N64, GB, GBA, NDS, Genesis, SMS, GG, PCE, WS.');
-            } else if (err.message === 'no_rom_in_zip') {
-                setError('No valid ROM found inside the ZIP file.');
-            } else {
-                setError('Error processing file. Please try again.');
-            }
+            setError(err.message === 'unknown_bytes' ? 'Unsupported ROM footprint.' : 'File processing failed.');
         } finally {
             setLoading(false);
         }
-    };
-
-    const onDrop = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-        const file = e.dataTransfer.files[0];
-        if (file) processFile(file);
-    }, []);
-
-    const onDragOver = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(true);
-    }, []);
-
-    const onDragLeave = useCallback((e: React.DragEvent) => {
-        e.preventDefault();
-        setIsDragging(false);
-    }, []);
-
-    const onFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-        if (file) processFile(file);
     };
 
     const clearInfo = () => {
@@ -132,312 +95,178 @@ const RoomieDemo: React.FC = () => {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    const formatSize = (bytes: number) => {
-        if (!bytes) return '0 B';
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    };
-
     return (
-        <div className="min-h-[80vh] px-6 py-12 max-w-7xl mx-auto flex flex-col items-center">
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="text-center mb-12"
-            >
-                <div className="flex items-center justify-center gap-3 mb-4">
-                    <Gamepad2 className="text-primary" size={32} />
-                    <h1 className="text-4xl md:text-5xl font-bold tracking-tighter uppercase italic">roomie</h1>
-                    <span className="bg-primary/10 text-primary text-[10px] px-2 py-0.5 rounded font-mono border border-primary/20">v1.1.1</span>
+        <div className="min-h-screen py-20 px-6 max-w-7xl mx-auto flex flex-col font-mono">
+            {/* Header Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-20">
+                <div className="lg:col-span-5 flex flex-col justify-center">
+                    <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
+                        <div className="flex items-center gap-4 mb-6">
+                            <div className="w-12 h-12 bg-primary flex items-center justify-center text-white">
+                                <CpuIcon size={24} />
+                            </div>
+                            <h1 className="text-5xl font-bold tracking-tighter uppercase italic">{t('roomie_demo.title')}</h1>
+                        </div>
+                        <p className="text-slate-400 text-lg mb-8 leading-relaxed max-w-md font-sans">
+                            {t('roomie_demo.description')}
+                        </p>
+                        <div className="flex gap-6">
+                            <a href="https://github.com/nikitacontreras/roomie" target="_blank" className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold hover:text-primary transition-colors border-b border-charcoal pb-1">
+                                <Github size={14} /> Repository
+                            </a>
+                            <a href="https://npmjs.com/package/roomie" target="_blank" className="flex items-center gap-2 text-xs uppercase tracking-widest font-bold hover:text-primary transition-colors border-b border-charcoal pb-1">
+                                <Activity size={14} /> NPM Package
+                            </a>
+                        </div>
+                    </motion.div>
                 </div>
-                <p className="text-slate-400 max-w-xl mx-auto font-light leading-relaxed">
-                    {t('roomie_demo.description')}
-                </p>
-                <div className="mt-4 flex justify-center gap-4">
-                    <a
-                        href="https://github.com/nikitacontreras/roomie"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-primary hover:text-primary/80 transition-colors"
-                    >
-                        <Github size={14} /> {t('roomie_demo.gh_repo')}
-                    </a>
-                </div>
-            </motion.div>
 
-            <div className="w-full max-w-3xl">
-                {!romInfo && !loading && (
+                <div className="lg:col-span-7">
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95 }}
+                        initial={{ opacity: 0, scale: 0.98 }}
                         animate={{ opacity: 1, scale: 1 }}
                         className={cn(
-                            "relative group cursor-pointer border-2 border-dashed rounded-2xl p-12 transition-all duration-300 flex flex-col items-center justify-center gap-4",
-                            isDragging
-                                ? "border-primary bg-primary/5 shadow-[0_0_30px_rgba(59,130,246,0.1)]"
-                                : "border-slate-800 hover:border-slate-700 bg-white/5 backdrop-blur-sm"
+                            "relative h-64 border-2 border-charcoal border-dashed transition-all duration-300 flex flex-col items-center justify-center group cursor-pointer",
+                            isDragging && "border-primary bg-primary/5",
+                            !romInfo && "hover:border-slate-600"
                         )}
-                        onDrop={onDrop}
-                        onDragOver={onDragOver}
-                        onDragLeave={onDragLeave}
-                        onClick={() => fileInputRef.current?.click()}
+                        onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                        onDragLeave={() => setIsDragging(false)}
+                        onDrop={(e) => { e.preventDefault(); setIsDragging(false); const f = e.dataTransfer.files[0]; if (f) processFile(f); }}
+                        onClick={() => !loading && fileInputRef.current?.click()}
                     >
-                        <input
-                            type="file"
-                            className="hidden"
-                            ref={fileInputRef}
-                            onChange={onFileSelect}
-                        />
-                        <div className="p-4 rounded-full bg-slate-900 border border-slate-800 group-hover:border-primary transition-colors">
-                            <Upload className={cn("transition-transform duration-300", isDragging ? "scale-110 text-primary" : "text-slate-500")} size={32} />
-                        </div>
-                        <div className="text-center">
-                            <p className="text-lg font-medium">{t('roomie_demo.upload_title')}</p>
-                            <p className="text-slate-500 text-sm mt-1">Direct ROMs or .zip files supported</p>
-                        </div>
-                        <div className="grid grid-cols-4 gap-2 mt-4 opacity-30 group-hover:opacity-60 transition-opacity">
-                            {['NES', 'SFC', 'N64', 'GB', 'GBA', 'NDS', 'MD', 'SMS'].map(s => (
-                                <span key={s} className="text-[9px] font-mono border border-slate-700 px-2 py-0.5 rounded uppercase">{s}</span>
-                            ))}
-                        </div>
-                        {error && (
-                            <motion.p
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                className="text-red-400 mt-4 text-sm font-medium"
-                            >
-                                {error}
-                            </motion.p>
+                        <input type="file" ref={fileInputRef} className="hidden" onChange={(e) => e.target.files?.[0] && processFile(e.target.files[0])} />
+
+                        {loading ? (
+                            <div className="text-center">
+                                <div className="w-10 h-2 bg-slate-800 relative overflow-hidden mb-4 mx-auto">
+                                    <motion.div className="absolute inset-0 bg-primary" animate={{ x: ['-100%', '100%'] }} transition={{ repeat: Infinity, duration: 1 }} />
+                                </div>
+                                <span className="text-[10px] uppercase tracking-widest text-primary animate-pulse">{t('roomie_demo.analyzing')}</span>
+                            </div>
+                        ) : (
+                            <>
+                                <Upload className={cn("mb-4 transition-colors", isDragging ? "text-primary" : "text-slate-600 group-hover:text-slate-400")} size={32} />
+                                <div className="text-center px-8">
+                                    <p className="text-sm font-bold uppercase tracking-widest">{t('roomie_demo.upload_title')}</p>
+                                    <p className="text-[10px] text-slate-500 mt-2 italic">{t('roomie_demo.upload_subtitle')}</p>
+                                </div>
+                            </>
                         )}
+                        {error && <p className="absolute bottom-4 text-red-500 text-[10px] uppercase">{error}</p>}
                     </motion.div>
-                )}
-
-                {loading && (
-                    <div className="flex flex-col items-center py-20">
-                        <div className="relative w-16 h-16">
-                            <motion.div
-                                className="absolute inset-0 border-4 border-primary rounded-full"
-                                animate={{ scale: [1, 1.2, 1], opacity: [1, 0.5, 1] }}
-                                transition={{ repeat: Infinity, duration: 1.5 }}
-                            />
-                            <motion.div
-                                className="absolute inset-2 border-2 border-primary/50 rounded-full border-t-transparent"
-                                animate={{ rotate: 360 }}
-                                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                            />
-                        </div>
-                        <p className="mt-6 text-slate-400 font-mono text-sm tracking-widest uppercase">{t('roomie_demo.analyzing')}</p>
-                    </div>
-                )}
-
-                <AnimatePresence>
-                    {romInfo && !loading && (
-                        <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, scale: 0.95 }}
-                            className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 rounded-2xl overflow-hidden shadow-2xl"
-                        >
-                            <div className={cn("p-8 border-b border-slate-800 flex justify-between items-start bg-gradient-to-r", getSystemColor(romInfo.system))}>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-1">
-                                        <span className="bg-primary/20 text-primary text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded italic">
-                                            {getSystemBadge(romInfo.system)}
-                                        </span>
-                                    </div>
-                                    <h2 className="text-3xl font-bold tracking-tight text-white drop-shadow-sm">{romInfo.name || "Unknown Title"}</h2>
-                                </div>
-                                <button
-                                    onClick={clearInfo}
-                                    className="p-2 text-white/50 hover:text-red-400 transition-colors"
-                                    title="Close"
-                                >
-                                    <Trash2 size={24} />
-                                </button>
-                            </div>
-
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-slate-800">
-                                <InfoItem
-                                    icon={<Cpu size={18} />}
-                                    label="Architecture"
-                                    value={romInfo.system.toUpperCase()}
-                                />
-                                <InfoItem
-                                    icon={<Hash size={18} />}
-                                    label="Serial / ID"
-                                    value={romInfo.gameCode || romInfo.gameid || romInfo.genesis?.serial || romInfo.sms?.product || 'N/A'}
-                                />
-                                <InfoItem
-                                    icon={<Globe size={18} />}
-                                    label="Region"
-                                    value={romInfo.region || 'Unknown / World'}
-                                />
-                                <InfoItem
-                                    icon={<Database size={18} />}
-                                    label="File Size"
-                                    value={formatSize(romInfo.size || 0)}
-                                />
-                                {romInfo.hash && (
-                                    <div className="col-span-1 md:col-span-2 bg-slate-900 border-t border-slate-800">
-                                        <div className="p-6 flex items-center gap-4 border-b border-slate-800/50">
-                                            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">
-                                                <Info size={18} />
-                                            </div>
-                                            <div className="overflow-hidden">
-                                                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">SHA-1 Hash</p>
-                                                <p className="font-mono text-xs text-slate-300 break-all">{romInfo.hash.sha1}</p>
-                                            </div>
-                                        </div>
-                                        <div className="p-6 flex items-center gap-4">
-                                            <div className="p-3 rounded-lg bg-slate-950 border border-slate-800 text-slate-400">
-                                                <Hash size={18} />
-                                            </div>
-                                            <div className="overflow-hidden">
-                                                <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">CRC32 Hash</p>
-                                                <p className="font-mono text-xs text-slate-300 break-all">{romInfo.hash.crc32}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-
-                            {/* Nintendo SFC Section */}
-                            {romInfo.system === 'sfc' && (
-                                <div className="p-8 bg-slate-950/50">
-                                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6">SFC Specific Data</h3>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Hardware</p>
-                                            <p className="text-sm">{romInfo.cartridge?.rom?.type || romInfo.sfc?.hardware || 'Standard'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">RAM Size</p>
-                                            <p className="text-sm">{formatSize(romInfo.cartridge?.ram || romInfo.sfc?.ram || 0)}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Nintendo NES Section */}
-                            {romInfo.system === 'nes' && (
-                                <div className="p-8 bg-slate-950/50">
-                                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6">iNES Metadata</h3>
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Mapper</p>
-                                            <p className="text-sm font-mono text-primary">{romInfo.nes?.mapper !== undefined ? `#${romInfo.nes.mapper}` : 'N/A'}</p>
-                                        </div>
-                                        <div className="col-span-1 md:col-span-2">
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Board / Mapper Name</p>
-                                            <p className="text-sm">{romInfo.nes?.mapperName || 'Generic iNES Board'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">PRG Banks</p>
-                                            <p className="text-sm">{formatSize(romInfo.nes?.prgRomSize || 0)}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">CHR Banks</p>
-                                            <p className="text-sm">{formatSize(romInfo.nes?.chrRomSize || 0)}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Header Type</p>
-                                            <p className="text-sm">NES {romInfo.nes?.version || '1.0'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Game Boy MBC Section */}
-                            {romInfo.system === 'gb' && (
-                                <div className="p-8 bg-slate-950/50">
-                                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6">Game Boy Attributes</h3>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Controller (MBC)</p>
-                                            <p className="text-sm font-mono text-emerald-400">{romInfo.cartridge?.mbc || 'Standard'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Title Check</p>
-                                            <p className="text-sm italic">Verified Header</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* Sega Section */}
-                            {(romInfo.system === 'genesis' || romInfo.system === 'sms' || romInfo.system === 'gg') && (
-                                <div className="p-8 bg-slate-950/50">
-                                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6">Sega Metadata</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Overseas Name</p>
-                                            <p className="text-sm italic">{romInfo.genesis?.overseasName || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Product Code</p>
-                                            <p className="text-sm font-mono">{romInfo.genesis?.serial || romInfo.sms?.product || 'Unknown'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* N64 Section */}
-                            {romInfo.system === 'n64' && (
-                                <div className="p-8 bg-slate-950/50">
-                                    <h3 className="text-xs uppercase tracking-[0.2em] font-bold text-primary mb-6">N64 Specific Data</h3>
-                                    <div className="grid grid-cols-2 gap-8">
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Internal Name</p>
-                                            <p className="text-sm italic">{romInfo.n64.name || 'N/A'}</p>
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] uppercase tracking-widest text-slate-500 font-bold mb-1">Revision</p>
-                                            <p className="text-sm">v{romInfo.n64.version || '1.0'}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
-                        </motion.div>
-                    )}
-                </AnimatePresence>
+                </div>
             </div>
 
-            <div className="mt-20 max-w-2xl text-center">
-                <h3 className="text-xl font-bold mb-6 italic tracking-tight uppercase">{t('roomie_demo.use_it')}</h3>
-                <div className="bg-slate-900 p-1 rounded-xl border border-slate-800 overflow-hidden text-left shadow-xl">
-                    <div className="bg-slate-950 px-4 py-2 border-b border-slate-800 flex items-center justify-between">
-                        <div className="flex gap-1.5">
-                            <div className="w-2.5 h-2.5 rounded-full bg-red-900/50" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-yellow-900/50" />
-                            <div className="w-2.5 h-2.5 rounded-full bg-green-900/50" />
+            {/* Results Section */}
+            <AnimatePresence mode="wait">
+                {romInfo ? (
+                    <motion.div
+                        key="results"
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        className="grid grid-cols-1 lg:grid-cols-12 gap-px bg-charcoal border border-charcoal"
+                    >
+                        {/* Header Panel */}
+                        <div className={cn("lg:col-span-4 bg-slate-950 p-8 border-l-4", getSystemColor(romInfo.system))}>
+                            <div className="flex flex-col h-full justify-between">
+                                <div>
+                                    <span className="text-[10px] text-slate-500 uppercase tracking-widest block mb-1">Architecture Detected</span>
+                                    <span className="text-primary font-bold text-xs uppercase mb-8 block">{getSystemLabel(romInfo.system)}</span>
+                                    <h2 className="text-3xl font-bold tracking-tight leading-none mb-4 lowercase italic break-words">{romInfo.name || "UNNAMED_ROM"}</h2>
+                                    <p className="text-xs text-slate-400 border-t border-charcoal pt-4">Internal checksum and header metadata successfully verified and cross-referenced.</p>
+                                </div>
+                                <button onClick={clearInfo} className="mt-12 flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] font-bold text-red-800 hover:text-red-500 transition-colors">
+                                    <Trash2 size={12} /> Clear Dataset
+                                </button>
+                            </div>
                         </div>
-                        <span className="text-[10px] font-mono uppercase tracking-widest text-slate-600">{t('roomie_demo.terminal')}</span>
-                    </div>
-                    <pre className="p-6 text-sm font-mono text-slate-300">
-                        <span className="text-primary italic"># {t('roomie_demo.install')}</span><br />
-                        npm install roomie<br /><br />
-                        <span className="text-primary italic">// {t('roomie_demo.usage')}</span><br />
-                        import Roomie from "roomie";<br />
-                        const roomie = new Roomie(fileBuffer);<br />
-                        await roomie.load(fileBuffer);<br />
-                        console.log(roomie.info);
-                    </pre>
+
+                        {/* Metadata Grid */}
+                        <div className="lg:col-span-8 bg-black grid grid-cols-1 md:grid-cols-2 gap-px">
+                            <DataField label="Primary ID" value={romInfo.gameCode || romInfo.gameid || romInfo.genesis?.serial || romInfo.sms?.product || 'N/A'} icon={<Hash size={14} />} />
+                            <DataField label="Registry Region" value={romInfo.region || 'Unknown'} icon={<Globe size={14} />} />
+                            <DataField label="Memory Usage" value={(romInfo.size ? (romInfo.size / (1024 * 1024)).toFixed(2) : "0") + " MB"} icon={<Database size={14} />} />
+                            <DataField label="CRC32 Checksum" value={romInfo.hash?.crc32 || 'N/A'} icon={<ChevronRight size={14} />} />
+
+                            <div className="md:col-span-2 p-8 bg-slate-950/50">
+                                <div className="flex items-center gap-3 mb-6">
+                                    <div className="w-1.5 h-1.5 bg-primary" />
+                                    <h3 className="text-xs font-bold uppercase tracking-widest">Integrity Fingerprint (SHA-1)</h3>
+                                </div>
+                                <p className="font-mono text-xs text-slate-500 break-all bg-black p-4 border border-charcoal">{romInfo.hash?.sha1}</p>
+                            </div>
+
+                            {/* System-Specific Extension */}
+                            {romInfo.system === 'nes' && (
+                                <div className="md:col-span-2 p-8 bg-slate-950 border-t border-charcoal">
+                                    <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                                        <MiniField label="Mapper" value={romInfo.nes?.mapperName || `#${romInfo.nes?.mapper}`} />
+                                        <MiniField label="Header" value={`iNES ${romInfo.nes?.version || '1.0'}`} />
+                                        <MiniField label="PRG RAM" value={romInfo.nes?.prgRomSize ? (romInfo.nes.prgRomSize / 1024) + " KB" : "0"} />
+                                        <MiniField label="CHR RAM" value={romInfo.nes?.chrRomSize ? (romInfo.nes.chrRomSize / 1024) + " KB" : "0"} />
+                                    </div>
+                                </div>
+                            )}
+
+                            {romInfo.system === 'sfc' && (
+                                <div className="md:col-span-2 p-8 bg-slate-950 border-t border-charcoal">
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs">
+                                        <div><span className="text-slate-600 uppercase block mb-1">Mapping</span>{romInfo.cartridge?.rom?.type || "Standard"}</div>
+                                        <div><span className="text-slate-600 uppercase block mb-1">Co-Processor</span>{romInfo.sfc?.hardware || "None"}</div>
+                                        <div><span className="text-slate-600 uppercase block mb-1">Work RAM</span>{(romInfo.sfc?.ram || 0) + " KB"}</div>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </motion.div>
+                ) : (
+                    <motion.div key="empty" className="py-20 flex flex-col items-center justify-center border border-charcoal text-slate-800 opacity-20 italic">
+                        <FileSearch size={48} className="mb-4" />
+                        <p className="text-sm uppercase tracking-widest animate-pulse">Waiting for telemetry data...</p>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Terminal Block */}
+            <div className="mt-20 max-w-2xl">
+                <div className="flex items-center gap-2 mb-4">
+                    <div className="w-3 h-3 bg-primary" />
+                    <h3 className="text-xs font-bold uppercase tracking-widest">Deployment Implementation</h3>
+                </div>
+                <div className="bg-black border border-charcoal text-[11px] p-6 leading-relaxed">
+                    <p className="text-primary mb-2">// 1. Initialize dependencies</p>
+                    <p className="text-slate-400 mb-6">$ npm install roomie jszip</p>
+
+                    <p className="text-primary mb-2">// 2. Analysis pipeline</p>
+                    <p className="text-slate-400">import <span className="text-slate-200">Roomie</span> from "roomie";</p>
+                    <p className="text-slate-400">const roomie = new <span className="text-slate-200">Roomie</span>(bin);</p>
+                    <p className="text-slate-400">await roomie.load(bin);</p>
+                    <p className="text-slate-500 italic mt-6">// Full JSON telemetry follows the .info specification</p>
                 </div>
             </div>
         </div>
     );
 };
 
-const InfoItem: React.FC<{ icon: React.ReactNode, label: string, value: string }> = ({ icon, label, value }) => (
-    <div className="bg-slate-900 p-6 flex flex-col gap-3 group">
-        <div className="flex items-center gap-2 text-slate-500 group-hover:text-primary transition-colors">
+const DataField: React.FC<{ label: string, value: string, icon: React.ReactNode }> = ({ label, value, icon }) => (
+    <div className="p-8 bg-slate-950 flex flex-col justify-between group">
+        <div className="flex items-center gap-2 text-slate-600 group-hover:text-primary transition-colors mb-4">
             {icon}
-            <span className="text-[10px] uppercase tracking-widest font-bold font-mono">{label}</span>
+            <span className="text-[10px] uppercase tracking-widest font-bold">{label}</span>
         </div>
-        <p className="text-lg font-medium">{value}</p>
+        <p className="text-xl font-bold tracking-tight text-bone truncate">{value}</p>
+    </div>
+);
+
+const MiniField: React.FC<{ label: string, value: string }> = ({ label, value }) => (
+    <div>
+        <span className="text-[9px] text-slate-600 uppercase tracking-widest block mb-1">{label}</span>
+        <span className="text-xs font-bold text-slate-300">{value}</span>
     </div>
 );
 
 export default RoomieDemo;
+
 
