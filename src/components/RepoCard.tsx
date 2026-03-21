@@ -1,11 +1,12 @@
 import React from 'react';
 import { Repo } from '../types';
-import { Code, Package } from 'lucide-react';
+import { Code, Package, Play } from 'lucide-react';
 import { TagList } from './TagList';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 
 export const RepoCard: React.FC<{ repo: Repo }> = ({ repo }) => {
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
     const currentLang = (i18n.language.split('-')[0] || 'en') as 'en' | 'es';
 
     return (
@@ -24,6 +25,11 @@ export const RepoCard: React.FC<{ repo: Repo }> = ({ repo }) => {
                             <Package size={14} /> Package
                         </a>
                     )}
+                    {repo.demoUrl && (
+                        <Link className="oss-link text-primary" to={repo.demoUrl}>
+                            <Play size={14} fill="currentColor" /> {currentLang === 'es' ? 'Ver demo' : 'View demo'}
+                        </Link>
+                    )}
                 </div>
             </div>
             <p className="text-slate-400 font-light leading-relaxed">
@@ -33,3 +39,4 @@ export const RepoCard: React.FC<{ repo: Repo }> = ({ repo }) => {
         </div>
     );
 };
+

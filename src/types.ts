@@ -18,8 +18,10 @@ export interface Repo {
     };
     githubUrl: string;
     npmUrl?: string;
+    demoUrl?: string;
     tags?: string[];
 }
+
 
 export interface ExperienceItem {
     year: string;

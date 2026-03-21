@@ -54,6 +54,18 @@ i18n
                         github: 'GitHub',
                         linkedin: 'LinkedIn',
                         orcid: 'ORCID'
+                    },
+                    roomie_demo: {
+                        title: 'roomie',
+                        description: 'Lightweight ROM metadata extractor for classic gaming systems.',
+                        upload_title: 'Drop your ROM file here',
+                        upload_subtitle: 'NDS, GBA, GB, SFC, N64, NES, MD, ZIP...',
+                        analyzing: 'Analyzing bits...',
+                        use_it: 'How to use it in your project?',
+                        terminal: 'terminal',
+                        install: 'install it',
+                        usage: 'use it',
+                        gh_repo: 'GitHub Repository'
                     }
                 }
             },
@@ -100,10 +112,23 @@ i18n
                         github: 'GitHub',
                         linkedin: 'LinkedIn',
                         orcid: 'ORCID'
+                    },
+                    roomie_demo: {
+                        title: 'roomie',
+                        description: 'Extractor de metadatos ligero para archivos ROM de consolas clásicas.',
+                        upload_title: 'Arrastra tu archivo ROM aquí',
+                        upload_subtitle: 'NDS, GBA, GB, SFC, N64, NES, MD, ZIP...',
+                        analyzing: 'Analizando bits...',
+                        use_it: '¿Cómo usarlo en tu proyecto?',
+                        terminal: 'terminal',
+                        install: 'instálalo',
+                        usage: 'úsalo',
+                        gh_repo: 'Repositorio GitHub'
                     }
                 }
             }
         }
     });
+
 
 export default i18n;

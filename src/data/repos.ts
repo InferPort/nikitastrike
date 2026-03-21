@@ -30,8 +30,10 @@ export const repos: Repo[] = [
         },
         githubUrl: "https://github.com/nikitacontreras/roomie",
         npmUrl: "https://npmjs.com/package/roomie",
+        demoUrl: "/roomie",
         tags: ["Binary Data", "ROMs", "Node.js"]
     },
+
     {
         name: "chaturbapi",
         type: "API Wrapper",
