@@ -8,8 +8,6 @@ const App: React.FC = () => {
     const { pathname } = useLocation();
 
     useEffect(() => {
-        document.documentElement.classList.add('dark');
-        // Scroll to top on route change
         window.scrollTo(0, 0);
     }, [pathname]);
 

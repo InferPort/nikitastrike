@@ -36,10 +36,3 @@ export interface ExperienceItem {
     };
 }
 
-export interface SectionProps {
-    id: string;
-    title?: string;
-    subtitle?: string;
-    children: React.ReactNode;
-    className?: string;
-}
