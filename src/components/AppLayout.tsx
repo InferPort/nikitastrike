@@ -5,7 +5,7 @@ export const AppLayout: React.FC<{ children: React.ReactNode }> = ({ children })
     return (
         <div className="min-h-screen bg-surface text-light-text">
             <HeaderNav />
-            <main className="pt-16">
+            <main className="pt-12">
                 {children}
             </main>
             <footer className="py-16 px-6 max-w-7xl mx-auto flex flex-col md:flex-row justify-center items-center gap-4 text-ink-muted">

@@ -10,11 +10,18 @@ export const HeaderNav: React.FC = () => {
     const { pathname } = useLocation();
     const [scrolled, setScrolled] = useState(false);
     const [menuOpen, setMenuOpen] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
+    const [navHovered, setNavHovered] = useState(false);
 
     const isHome = pathname === '/';
 
     useEffect(() => {
-        const onScroll = () => setScrolled(window.scrollY > 20);
+        const onScroll = () => {
+            setScrolled(window.scrollY > 10);
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            setScrollProgress(docHeight > 0 ? scrollTop / docHeight : 0);
+        };
         window.addEventListener('scroll', onScroll, { passive: true });
         return () => window.removeEventListener('scroll', onScroll);
     }, []);
@@ -37,53 +44,89 @@ export const HeaderNav: React.FC = () => {
     ];
 
     return (
-        <header className={cn(
-            "fixed top-0 w-full z-50 transition-all duration-500",
-            scrolled
-                ? "bg-surface/90 backdrop-blur-xl border-b border-line"
-                : "bg-surface/50 backdrop-blur-md border-b border-transparent"
-        )}>
-            <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                <Link to="/" className="flex items-center gap-3 hover:opacity-80 transition-all duration-300 active:scale-95">
-                    <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-                        <Terminal className="text-white" size={16} />
-                    </div>
-                    <span className="font-bold tracking-tight text-lg">nikitastrike</span>
-                </Link>
-                <nav className="hidden md:flex items-center gap-8 text-sm font-medium tracking-wide">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.id}
-                            className="relative text-ink-dim hover:text-primary transition-colors duration-300 after:absolute after:bottom-[-4px] after:left-0 after:w-0 after:h-px after:bg-primary after:transition-all after:duration-300 hover:after:w-full"
-                            to={link.href}
-                            onClick={() => scrollIntoView(link.id)}
-                        >
-                            {link.label}
-                        </Link>
-                    ))}
-                </nav>
-                <div className="flex items-center gap-4">
+        <header
+            className={cn(
+                "fixed top-0 w-full z-50 transition-all duration-500 h-12",
+                scrolled
+                    ? "bg-surface/90 backdrop-blur-xl"
+                    : "bg-surface/20 backdrop-blur-sm"
+            )}
+            onMouseEnter={() => setNavHovered(true)}
+            onMouseLeave={() => setNavHovered(false)}
+        >
+            <div className="max-w-7xl mx-auto px-6 h-full flex items-center justify-between">
+                <div className="flex items-center gap-8">
+                    <Link to="/" className="flex items-center gap-2 hover:opacity-80 transition-all duration-300 active:scale-95 shrink-0">
+                        <div className="w-7 h-7 bg-primary rounded-md flex items-center justify-center shadow-[0_0_10px_rgba(74,142,255,0.2)]">
+                            <Terminal className="text-white" size={14} />
+                        </div>
+                    </Link>
+                    <nav className="hidden md:flex items-center gap-5 text-[11px] font-bold tracking-[0.12em] uppercase">
+                        {navLinks.map((link, i) => (
+                            <Link
+                                key={link.id}
+                                className={cn(
+                                    "text-ink-dim hover:text-primary transition-all duration-300 whitespace-nowrap",
+                                    navHovered
+                                        ? "opacity-100 translate-x-0 pointer-events-auto"
+                                        : "opacity-0 translate-x-[-12px] pointer-events-none"
+                                )}
+                                style={{
+                                    transitionDelay: navHovered ? `${80 + i * 50}ms` : '0ms',
+                                    transitionDuration: '400ms',
+                                }}
+                                to={link.href}
+                                onClick={() => scrollIntoView(link.id)}
+                            >
+                                {link.label}
+                            </Link>
+                        ))}
+                    </nav>
+                </div>
+                <div className="flex items-center gap-3">
                     <LanguageToggle />
-                    <a
-                        className="hidden md:inline-flex bg-primary text-white px-5 py-2 rounded-lg text-sm font-bold tracking-wide hover:bg-primary-dim transition-all duration-300 active:scale-[0.97]"
-                        href="mailto:me@nikitastrike.co"
+                    <div
+                        className={cn(
+                            "hidden md:flex items-center gap-3 transition-all duration-300",
+                            navHovered
+                                ? "opacity-100 translate-x-0 pointer-events-auto"
+                                : "opacity-0 translate-x-[12px] pointer-events-none"
+                        )}
+                        style={{
+                            transitionDelay: navHovered ? `${80 + navLinks.length * 50 + 80}ms` : '0ms',
+                            transitionDuration: '400ms',
+                        }}
                     >
-                        {t('nav.cta')}
-                    </a>
+                        <a
+                            className="bg-primary text-white px-3 py-1.5 rounded-md text-[11px] font-bold tracking-wide hover:bg-primary-dim transition-all duration-300"
+                            href="mailto:me@nikitastrike.co"
+                        >
+                            {t('nav.cta')}
+                        </a>
+                    </div>
                     <button
                         className="md:hidden text-light-text hover:text-primary transition-colors"
                         onClick={() => setMenuOpen(!menuOpen)}
                         aria-label="Toggle menu"
                     >
-                        {menuOpen ? <X size={24} /> : <Menu size={24} />}
+                        {menuOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
                 </div>
             </div>
 
-            <div className={cn(
-                "md:hidden fixed inset-x-0 top-16 bg-surface/95 backdrop-blur-xl border-b border-line transition-all duration-400 overflow-hidden",
-                menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-            )}>
+            <div className="absolute bottom-0 left-0 right-0 h-[1px] bg-line/30">
+                <div
+                    className="h-full bg-primary transition-all duration-150 ease-out"
+                    style={{ width: `${scrollProgress * 100}%` }}
+                />
+            </div>
+
+            <div
+                className={cn(
+                    "md:hidden fixed inset-x-0 top-12 bg-surface/95 backdrop-blur-xl border-b border-line transition-all duration-400 overflow-hidden",
+                    menuOpen ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
+                )}
+            >
                 <nav className="flex flex-col px-6 py-6 gap-4">
                     {navLinks.map((link, i) => (
                         <Link
